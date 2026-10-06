@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use crate::document_ref::DocumentRef;
 use async_trait::async_trait;
 use automerge::Automerge;
@@ -19,7 +21,7 @@ pub enum PersistenceError {
 
 /// Persistence targets, like disk, or peers, or a memory store
 #[async_trait]
-pub trait PersistenceTarget: Send + Sync {
+pub trait PersistenceTarget: Send + Sync + Debug {
     /// Persist a document to the source.
     /// Implementers should ensure this is cancellation-safe, and parallelizable.
     /// If there is an existing doc at the source, it should be merged into the doc.

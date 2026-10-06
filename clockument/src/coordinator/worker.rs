@@ -1,24 +1,39 @@
-use std::{collections::{HashMap, HashSet}, sync::Arc};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Arc,
+};
 
 use automerge::{Automerge, ChangeHash};
 use futures::{Stream, StreamExt};
 use indextree::Arena;
 use sedimentree_core::id::SedimentreeId;
-use tokio::{select, sync::{Mutex, mpsc}, task::JoinSet};
+use tokio::{
+    select,
+    sync::{Mutex, mpsc},
+    task::JoinSet,
+};
 use tokio_util::sync::CancellationToken;
 
-use crate::{coordinator::{Clockument, ClockumentError, Insertion, InsertionFailure, PersistenceId, PutResult}, document_ref::DocumentRef, heads::Heads, persistence::{NegligenceDecision, PersistenceError, PersistenceTarget}};
-
+use crate::{
+    coordinator::{
+        Clockument, ClockumentError, Insertion, InsertionFailure, PersistenceId, PutResult,
+    },
+    document_ref::DocumentRef,
+    heads::Heads,
+    persistence::{NegligenceDecision, PersistenceError, PersistenceTarget},
+};
 
 // TODO: eventually we'll need rebroadcast data probably (like which clockument to broadcast deps of)
+#[derive(Debug)]
 pub struct Rebroadcast;
 
+#[derive(Debug)]
 struct PendingInsertion {
     insertion: Insertion,
     dependencies: DependencyTree,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct PersistenceWorker {
     clockument: Clockument,
     id: PersistenceId,
@@ -39,13 +54,13 @@ pub struct PersistenceWorker {
     pending_insertions: Arc<Mutex<Vec<PendingInsertion>>>,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct DependencyTreeItem {
     // If a dependency tree item is poisoned, it means we no longer wait for the dependency or any of its children.
     poisoned: bool,
     resolved: bool,
     document_ref: DocumentRef,
-} 
+}
 
 pub type DependencyTree = Arena<DependencyTreeItem>;
 

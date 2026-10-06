@@ -25,7 +25,7 @@ use crate::{
 
 mod worker;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct Insertion {
     id: SedimentreeId,
     doc: Automerge,
@@ -39,6 +39,7 @@ struct Insertion {
     original_dependencies: DependencyTree,
 }
 
+#[derive(Debug)]
 struct PutResult {
     doc_ref: DocumentRef,
     source: PersistenceId,
@@ -99,12 +100,13 @@ enum ClockumentPutResult {
     },
 }
 
+#[derive(Debug)]
 pub struct ClockumentCoordinator {
     last_persistence_id: AtomicU64,
     inner: Arc<ClockumentCoordinatorInner>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct ClockumentCoordinatorInner {
     workers: WorkerPool,
     clockument: Clockument,

@@ -36,7 +36,7 @@ fn generate_sedimentree_id() -> SedimentreeId {
     id
 }
 
-#[derive(Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 enum FailureMode {
     #[default]
     None,
@@ -44,7 +44,7 @@ enum FailureMode {
     Fail,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct TransientTarget {
     ping: Duration,
     data: Arc<RwLock<HashMap<SedimentreeId, Automerge>>>,
