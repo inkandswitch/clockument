@@ -13,7 +13,13 @@ use automerge::{
     transaction::{Transactable, Transaction},
 };
 use autosurgeon::{Hydrate, Reconcile};
-use clockument::{coordinator::{Clockument, ClockumentCoordinator, ClockumentError, PersistenceId}, dependency::DependencyResolver, document_ref::DocumentRef, heads::Heads, persistence::{NegligenceDecision, PersistenceError, PersistenceTarget}};
+use clockument::{
+    coordinator::{Clockument, ClockumentCoordinator, ClockumentError, PersistenceId},
+    dependency::DependencyResolver,
+    document_ref::DocumentRef,
+    heads::Heads,
+    persistence::{NegligenceDecision, PersistenceError, PersistenceTarget},
+};
 use futures::{StreamExt, stream::BoxStream};
 use indextree::{Arena, NodeEdge};
 use rand::Rng;
@@ -22,7 +28,6 @@ use sedimentree_core::id::SedimentreeId;
 use thiserror::Error;
 use tokio::sync::{Barrier, Mutex, RwLock, broadcast, watch};
 use tokio_stream::wrappers::BroadcastStream;
-
 
 fn generate_sedimentree_id() -> SedimentreeId {
     let mut id = [0u8; 32];
@@ -262,6 +267,7 @@ impl DocumentData {
     }
 }
 
+#[derive(Debug)]
 struct ClockumentDatabase {
     docs: HashMap<SedimentreeId, Automerge>,
     decision: NegligenceDecision,
@@ -693,10 +699,7 @@ async fn removed_target_causes_heads_ready_to_fail(
 
     let res = waiter_task.await.expect("join error");
 
-    assert!(matches!(
-        res,
-        Err(ClockumentError::TargetRemoved)
-    ));
+    assert!(matches!(res, Err(ClockumentError::TargetRemoved)));
 
     Ok(())
 }

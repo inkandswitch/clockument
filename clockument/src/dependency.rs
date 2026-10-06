@@ -1,15 +1,14 @@
 use std::collections::HashSet;
 
+use crate::{document_ref::DocumentRef, persistence::NegligenceDecision};
 use async_trait::async_trait;
 use automerge::transaction::Transaction;
 use sedimentree_core::id::SedimentreeId;
-
-use crate::{document_ref::DocumentRef, persistence::NegligenceDecision};
-
+use std::fmt::Debug;
 
 /// Provides utilities to manage dependencies, given a transaction.
 #[async_trait]
-pub trait DependencyResolver: Send + Sync {
+pub trait DependencyResolver: Send + Sync + Debug {
     /// Get an array of shallowly-nested dependencies from the [Transaction].
     /// Users should implement this based on their own schema, which may vary.
     /// Sub-documents may include more dependencies, so this method must handle arbitrary sizes.

@@ -1,9 +1,8 @@
- 
+use crate::document_ref::DocumentRef;
 use async_trait::async_trait;
-use automerge::Automerge ;
+use automerge::Automerge;
 use futures::stream::BoxStream;
 use sedimentree_core::id::SedimentreeId;
-use crate::document_ref::DocumentRef;
 
 #[derive(Debug, thiserror::Error)]
 pub enum PersistenceError {
@@ -46,7 +45,7 @@ pub trait PersistenceTarget: Send + Sync {
 /// but one or more of `dependencies(A)` are not persisted.
 /// Negligence will never occur under normal conditions, but disk errors, permission changes, user foolishness,
 /// or similar may cause negligence.
-#[derive(Clone, Copy, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum NegligenceDecision {
     /// The target should propagate the document, despite the negligent behavior.
     /// This will likely cause an explosion of negligence across every persistence target.

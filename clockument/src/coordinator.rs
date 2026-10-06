@@ -1,12 +1,27 @@
-use std::{collections::{HashMap, HashSet}, sync::{Arc, atomic::{AtomicU64, Ordering}}};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::{
+        Arc,
+        atomic::{AtomicU64, Ordering},
+    },
+};
 
 use automerge::{Automerge, PatchLog, transaction::Transaction};
 use sedimentree_core::id::SedimentreeId;
 use thiserror::Error;
-use tokio::{select, sync::{Mutex, broadcast, mpsc}};
+use tokio::{
+    select,
+    sync::{Mutex, broadcast, mpsc},
+};
 use tokio_util::sync::CancellationToken;
 
-use crate::{coordinator::worker::{DependencyTree, PersistenceWorker, Rebroadcast}, dependency::DependencyResolver, document_ref::DocumentRef, heads::Heads, persistence::{PersistenceError, PersistenceTarget}};
+use crate::{
+    coordinator::worker::{DependencyTree, PersistenceWorker, Rebroadcast},
+    dependency::DependencyResolver,
+    document_ref::DocumentRef,
+    heads::Heads,
+    persistence::{PersistenceError, PersistenceTarget},
+};
 
 mod worker;
 
@@ -39,7 +54,7 @@ struct InsertionFailure {
 
 type WorkerPool = Arc<Mutex<HashMap<PersistenceId, Arc<PersistenceWorker>>>>;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Clockument {
     id: SedimentreeId,
     /// Specifies a depth which to stop searching for dependencies.
